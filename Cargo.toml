@@ -1,0 +1,11 @@
+[package]
+name = "modeling_daily_activity"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+csv = "1.4.0"
+eframe = "0.33.3"
+egui = "0.33.3"
+rand = "0.10.0"
+serde = { version = "1.0.228", features = ["derive"] }
