@@ -1,3 +1,6 @@
+//! Defines encodings and transformations of data used by the project. Useful for decreasing
+//! loading or processing times.
+
 use std::{collections::BTreeMap, io::Write};
 
 #[derive(Debug, serde::Deserialize)]

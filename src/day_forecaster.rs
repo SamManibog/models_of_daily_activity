@@ -1,3 +1,8 @@
+//!	Defines the DayForecaster trait and associated types in order to allow generic implementations
+//!	for easier data visualization.
+//!
+//! Also defines a RandomForecaster for testing data visualizers.
+
 use std::{cell::RefCell, rc::Rc};
 
 use rand::{Rng, RngExt};

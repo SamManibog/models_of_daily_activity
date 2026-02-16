@@ -1,4 +1,4 @@
-use modeling_daily_activity::{app::ActivityForecastApp, day_forecaster::RandomForecaster, encodings, state_space::BlockStateChangeMatrix};
+use modeling_daily_activity::{app::ActivityForecastApp, day_forecaster::RandomForecaster, encodings, markov_chain::BlockStateChangeMatrix};
 
 fn main() {
     run_app();

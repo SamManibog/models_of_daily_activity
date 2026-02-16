@@ -1,6 +1,6 @@
 pub mod encodings;
 
-pub mod state_space;
+pub mod markov_chain;
 
 pub mod day_forecaster;
 
