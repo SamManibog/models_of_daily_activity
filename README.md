@@ -2,6 +2,14 @@
 
 A class project for Oregon State University HC 407 attempting to model and forecast daily behavior based on the activities previously performed throughout the day. 
 
+## Contributors
+
+Sam Manibog - Software Implementation, Model Design
+
+Osvaldo Hernandez - Model Design
+
+Jackson Blomquist - Model Design
+
 ## Citations
 
 Data originates from the following source:

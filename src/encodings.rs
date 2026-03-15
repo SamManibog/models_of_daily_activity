@@ -135,6 +135,7 @@ impl Ord for DayId {
 }
 
 /// the category of an activity performed
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ActivityCategory {
     Sleeping,
     PersonalCare,
@@ -216,7 +217,7 @@ impl ActivityCategory {
         match self {
             Self::Sleeping => "Sleeping",
             Self::PersonalCare => "Personal Care",
-            Self::HouseholdChores => "Household Chores",
+            Self::HouseholdChores => "House Chores",
             Self::Childcare => "Childcare",
             Self::AdultCare => "Adult Care",
             Self::Work => "Work",
@@ -227,10 +228,10 @@ impl ActivityCategory {
             Self::Shopping => "Shopping",
             Self::Services => "Services",
             Self::CivicDuties => "Civic Duties",
-            Self::EatingDrinking => "Eating and Drinking",
+            Self::EatingDrinking => "Dining",
             Self::Leisure => "Leisure",
             Self::Exercise => "Exercise",
-            Self::ReligiousActivities => "Religious Activities",
+            Self::ReligiousActivities => "Religion",
             Self::Volunteering => "Volunteering",
             Self::Calls => "Calls",
             Self::Travel => "Travel",
@@ -305,11 +306,16 @@ impl ActivityCategory {
     }
 }
 
-pub fn block_remap(block_duration: usize, input: &str, output: &str) {
+pub fn block_remap(block_duration: usize, input: &str, output: &str, readable: bool) {
     debug_assert!(60*24 % block_duration == 0, "block duration must divide evenly into a day");
 
     let mut reader = csv::Reader::from_path(input).unwrap();
-    let mut output_file = std::fs::File::create(format!("{output}.ablk")).expect("failed to create output file");
+    let extension = if readable {
+        "csv"
+    } else {
+        "ablk"
+    };
+    let mut output_file = std::fs::File::create(format!("{output}.{extension}")).expect("failed to create output file");
 
     let mut map = BTreeMap::<u32, Vec<ActivityRecord>>::new();
     for result in reader.deserialize() {
@@ -320,19 +326,25 @@ pub fn block_remap(block_duration: usize, input: &str, output: &str) {
     let blocks_per_day: [u8; 4] = ((60 * 24 / block_duration) as u32).to_le_bytes();
     let day_count: [u8; 8] = (map.len() as u64).to_le_bytes();
 
-    output_file.write(&blocks_per_day).expect("failed to write blocks per day to file");
-    output_file.write(&day_count).expect("failed to write day count to file");
+    if !readable {
+        output_file.write(&blocks_per_day).expect("failed to write blocks per day to file");
+        output_file.write(&day_count).expect("failed to write day count to file");
+    }
 
-    for records in map.values() {
-        let blocks = get_day_blocks(block_duration, records);
+    if readable {
+        for records in map.values() {
+            let blocks = get_day_blocks(block_duration, records);
 
-        /*
-        let text = blocks.iter().map(|b| b.to_string()).collect::<Vec<_>>().join(", ");
-        output_file.write_all(text.as_bytes()).expect("failed to write text to file");
-        output_file.write_all(b"\n").expect("failed to write newline to file");
-        */
+            let text = blocks.iter().map(|b| b.to_string()).collect::<Vec<_>>().join(", ");
+            output_file.write_all(text.as_bytes()).expect("failed to write text to file");
+            output_file.write_all(b"\n").expect("failed to write newline to file");
+        }
+    } else {
+        for records in map.values() {
+            let blocks = get_day_blocks(block_duration, records);
 
-        output_file.write_all(&blocks).expect("failed to write block to file");
+            output_file.write_all(&blocks).expect("failed to write block to file");
+        }
     }
 
     output_file.flush().expect("failed to flush output file");
