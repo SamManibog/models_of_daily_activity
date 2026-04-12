@@ -1,4 +1,4 @@
-# Models of Daily Activity
+# Markov Chain Monte Carlo Model of Daily Activity
 
 A class project for Oregon State University HC 407 attempting to model and forecast daily behavior based on the activities previously performed throughout the day. 
 
